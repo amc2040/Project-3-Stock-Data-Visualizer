@@ -75,3 +75,99 @@ class AlphaVantageAPI:
             # Handle network or connection errors
             print(f"Network error: {e}")
             return None
+# Class: StockData
+
+class StockData:
+    """Manages and processes stock data"""
+    
+    def __init__(self, symbol, raw_data, time_series):
+        """
+        Initialize stock data
+        
+        Args:
+            symbol (str): Stock symbol (e.g., 'AAPL')
+            raw_data (dict): Raw JSON data from API
+            time_series (int): Time series type (1-4)
+        """
+        self.symbol = symbol
+        self.raw_data = raw_data
+        self.time_series = time_series
+        self.filtered_data = {}  # To store filtered results
+    
+    def filter_by_date_range(self, start_date, end_date):
+        """
+        Filter stock data by date range
+        
+        Args:
+            start_date (datetime): Begin date
+            end_date (datetime): End date
+        
+        Returns:
+            dict: Filtered data with dates as keys
+        """
+        # Determine the correct key for time series data based on user's selection
+        time_series_key_map = {
+            1: "Time Series (60min)",
+            2: "Time Series (Daily)",
+            3: "Weekly Time Series",
+            4: "Monthly Time Series"
+        }
+        
+        time_series_key = time_series_key_map[self.time_series]
+        
+        # Check that key exists in the API response
+        if time_series_key not in self.raw_data:
+            print(f"Error: Could not find '{time_series_key}' in API response")
+            return {}
+        
+        time_series_data = self.raw_data[time_series_key]
+        
+        # Filter the data between the start and end dates
+        self.filtered_data = {}
+        for date_str, values in time_series_data.items():
+            # Extract only the date portion (ignore time for intraday)
+            date_only = date_str.split()[0]
+            date_obj = datetime.strptime(date_only, '%Y-%m-%d')
+            
+            # Keep only entries within the specified date range
+            if start_date <= date_obj <= end_date:
+                self.filtered_data[date_str] = values
+        
+        return self.filtered_data
+    
+    def get_formatted_data(self):
+        """
+        Format filtered data for charting
+        
+        Returns:
+            dict: Formatted data containing lists of dates and OHLC values
+        """
+        # If there’s no filtered data, return None
+        if not self.filtered_data:
+            return None
+        
+        dates = []
+        open_prices = []
+        high_prices = []
+        low_prices = []
+        close_prices = []
+        
+        # Sort entries by date to keep data in chronological order
+        sorted_dates = sorted(self.filtered_data.keys())
+        
+        for date in sorted_dates:
+            values = self.filtered_data[date]
+            dates.append(date.split()[0])  # Use only the date part (ignore time)
+            open_prices.append(float(values['1. open']))
+            high_prices.append(float(values['2. high']))
+            low_prices.append(float(values['3. low']))
+            close_prices.append(float(values['4. close']))
+        
+        # Return a dictionary formatted for chart rendering
+        return {
+            'dates': dates,
+            'open': open_prices,
+            'high': high_prices,
+            'low': low_prices,
+            'close': close_prices
+        }
