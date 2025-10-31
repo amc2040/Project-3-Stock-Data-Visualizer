@@ -1,7 +1,7 @@
-@ -0,0 +1,28 @@
 import webbrowser
 import os
 import tempfile
+
 
 class ConsoleUI:
     
@@ -26,7 +26,7 @@ class ConsoleUI:
                     print("Invalid choice. Please enter 1 or 2.")
             except ValueError:
                 print("Invalid choice. Please enter 1 or 2.")
- @staticmethod
+    @staticmethod
     def get_time_series():
         print("\nSelect the Time Series of the chart you want to Generate")
         print("-" * 10)
@@ -59,11 +59,11 @@ class ConsoleUI:
         print(f"n{message}")
 
 
- class ChartGenerator:
+class ChartGenerator:
         
         @staticmethod
         def create_chart(data, symbol, chart_type, start_date, end_date):
-            if not data or not date['dates']:
+            if not data or not data['dates']:
                 return None
             
             chart_type_str = 'bar' if chart_type == 1 else 'line'
@@ -72,6 +72,7 @@ class ConsoleUI:
 <!DOCTYPE HTML>
 <html>
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {{
             font-family: Arial, sans-serif;
@@ -186,7 +187,7 @@ class ConsoleUI:
             return temp_file.name
         
         @staticmethod
-        def open_in_browser(file-path):
+        def open_in_browser(file_path):
             try:
                 webbrowser.open('file://' + os.path.abspath(file_path))
                 print(f"\nChart opened in your default browser.")

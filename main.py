@@ -6,7 +6,7 @@ def main():
         print("-" * 50)
         print()
 
-        app = StockController
+        app = StockController()
         app.run()
 
     except KeyboardInterrupt:

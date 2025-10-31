@@ -3,7 +3,7 @@ Stock Data Visualizer - Controller Layer
 Communicates between Model and View
 """
 
-from model import AlphaVantageAPI, StockData, validate_date_format, Validate_date_range
+from model import AlphaVantageAPI, StockData, validate_date_format, validate_date_range
 from view import ConsoleUI, ChartGenerator
 
 class StockController:
@@ -58,7 +58,7 @@ class StockController:
                 self.ui.display_error("Failed to fetch stock data. Please check your API key and try again.")
                 return
         
-            """Procces data"""
+            """Process data"""
             stock_data = StockData(symbol, raw_data, time_series)
             filtered_data = stock_data.filter_by_date_range(start_date, end_date)
             
@@ -89,7 +89,6 @@ class StockController:
                 return
         
             """Open chart in browser"""
-            self.chart_gen.open_in_browser(chart_file)
             self.chart_gen.open_in_browser(chart_file)
             
         except KeyboardInterrupt:
