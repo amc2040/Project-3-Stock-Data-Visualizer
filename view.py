@@ -57,3 +57,139 @@ class ConsoleUI:
     @staticmethod
     def display_success(message):
         print(f"n{message}")
+
+
+ class ChartGenerator:
+        
+        @staticmethod
+        def create_chart(data, symbol, chart_type, start_date, end_date):
+            if not data or not date['dates']:
+                return None
+            
+            chart_type_str = 'bar' if chart_type == 1 else 'line'
+
+            html_content = f"""
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }}
+        .container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }}
+        h1 {{
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }}
+        .chart-container {{
+            position: relative;
+            height: 600px;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Data for {symbol}: {start_date} to {end_date}</h1>
+        <div class="chart-container">
+            <canvas id="stockChart"></canvas>
+        </div>
+    </div>
+    
+    <script>
+        const ctx = document.getElementById('stockChart').getContext('2d');
+        const chart = new Chart(ctx, {{
+            type: '{chart_type_str}',
+            data: {{
+                labels: {data['dates']},
+                datasets: [
+                    {{
+                        label: 'Open',
+                        data: {data['open']},
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2
+                    }},
+                    {{
+                        label: 'High',
+                        data: {data['high']},
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2
+                    }},
+                    {{
+                        label: 'Low',
+                        data: {data['low']},
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2
+                    }},
+                    {{
+                        label: 'Close',
+                        data: {data['close']},
+                        backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 2
+                    }}
+                ]
+            }},
+            options: {{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {{
+                    y: {{
+                        beginAtZero: false,
+                        title: {{
+                            display: true,
+                            text: 'Price ($)'
+                        }}
+                    }},
+                    x: {{
+                        title: {{
+                            display: true,
+                            text: 'Date'
+                        }},
+                        ticks: {{
+                            maxRotation: 45,
+                            minRotation: 45
+                        }}
+                    }}
+                }},
+                plugins: {{
+                    legend: {{
+                        display: true,
+                        position: 'top'
+                    }},
+                    title: {{
+                        display: false
+                    }}
+                }}
+            }}
+        }});
+    </script>
+</body>
+</html>
+"""
+            
+            temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False)
+            temp_file.write(html_content)
+            temp_file.close()
+
+            return temp_file.name
+        
+        @staticmethod
+        def open_in_browser(file-path):
+            try:
+                webbrowser.open('file://' + os.path.abspath(file_path))
+                print(f"\nChart opened in your default browser.")
+            except Exception as e:
+                print(f"\nError opening browser: {e}")
+                print(f"You can manually open the file at: {file_path}")
