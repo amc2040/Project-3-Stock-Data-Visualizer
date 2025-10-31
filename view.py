@@ -47,7 +47,7 @@ class ConsoleUI:
 
     @staticmethod
     def get_date(prompt):
-        date_str = input(f"\n{prompt}").strip()
+        date_str = input(f"\n{prompt} ").strip()
         return date_str
     
     @staticmethod
