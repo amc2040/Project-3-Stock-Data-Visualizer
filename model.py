@@ -203,3 +203,37 @@ def validate_date_range(start_date, end_date):
     """
     # Ensure the end date isn’t before the start date
     return end_date >= start_date
+
+# Validation Functions
+def validate_date_format(date_string):
+    """
+    Validate date format (YYYY-MM-DD)
+    
+    Args:
+        date_string (str): Date string to validate
+    
+    Returns:
+        datetime object if valid, None otherwise
+    """
+    try:
+        # Try to parse the date; if it fails, ValueError is raised
+        return datetime.strptime(date_string, '%Y-%m-%d')
+    except ValueError:
+        # Return None if the format is invalid
+        return None
+
+
+def validate_date_range(start_date, end_date):
+    """
+    Validate that end date is after start date
+    
+    Args:
+        start_date (datetime): Start date
+        end_date (datetime): End date
+    
+    Returns:
+        bool: True if valid, False otherwise
+    """
+    # Ensure the end date isn’t before the start date
+    return end_date >= start_date
+
